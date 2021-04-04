@@ -1,8 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import io from 'socket.io-client';
+
 import AppRouter from './router/AppRouter';
+import UserContext from './context/UserContext';
 
 function App() {
+  const sessionToken = localStorage.getItem("sessionToken");
+  const [userInfo, setUserInfo] = useState(null)
+
   useEffect(() => {
     const socketClient = io("http://localhost:8080", {
       transports: ['websocket', 'polling', 'flashsocket'], 'auth': {
@@ -20,7 +25,9 @@ function App() {
   }, [])
 
   return (
-    <AppRouter />
+    <UserContext.Provider value={{ sessionToken, userInfo, setUserInfo }}>
+      <AppRouter />
+    </UserContext.Provider>
   );
 }
 
