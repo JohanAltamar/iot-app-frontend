@@ -22,6 +22,9 @@ const AppRouter = () => {
       if (resp?.results) {
         setUserInfo(resp.results[0])
       }
+      else {
+        setUserInfo(null);
+      }
       setLoading(false);
     }
     fetchInfo();
