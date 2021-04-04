@@ -5,6 +5,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import Copyright from "../Copyright"
 import { loginUser } from '../../api/users';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,9 +41,14 @@ const useStyles = makeStyles((theme) => ({
 const Form = () => {
   const classes = useStyles();
   const { handleSubmit, control } = useForm({ mode: "onBlur" });
+  const history = useHistory();
 
   const onSubmit = async (data) => {
-    await loginUser(data);
+    const resp = await loginUser(data);
+    if (resp?.sessionToken) {
+      localStorage.setItem("sessionToken", resp.sessionToken)
+      history.replace("/");
+    }
   };
 
   return (
