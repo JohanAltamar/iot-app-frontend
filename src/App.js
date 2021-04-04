@@ -5,8 +5,13 @@ import AppRouter from './router/AppRouter';
 import UserContext from './context/UserContext';
 
 function App() {
-  const sessionToken = localStorage.getItem("sessionToken");
+  const [sessionToken, setSessionToken] = useState(localStorage.getItem("sessionToken"));
   const [userInfo, setUserInfo] = useState(null)
+
+  // SET SESSION TOKEN IN LOCALSTORAGE
+  useEffect(() => {
+    localStorage.setItem("sessionToken", sessionToken)
+  }, [sessionToken])
 
   useEffect(() => {
     const socketClient = io("http://localhost:8080", {
@@ -25,7 +30,7 @@ function App() {
   }, [])
 
   return (
-    <UserContext.Provider value={{ sessionToken, userInfo, setUserInfo }}>
+    <UserContext.Provider value={{ sessionToken, setSessionToken, userInfo, setUserInfo }}>
       <AppRouter />
     </UserContext.Provider>
   );
