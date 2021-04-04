@@ -12,25 +12,38 @@ export const loginUser = async (userInfo) => {
   }
 }
 
-export const fetchUserInfo = async (token) => {
+export const logoutUser = async (token) => {
   try {
-    const res = await axios.get(`${apiUrl}/api/users/get-info`, {
-      headers: {
-        "x-session-key": token
-      }
-    })
+    const res = await axios.post(
+      `${apiUrl}/api/auth/logout`, undefined, axiosOptions(token)
+    )
     return res.data
   } catch (error) {
     errorHandler(error)
-    if (error.response) {
-      localStorage.removeItem("sessionToken")
-    }
   }
 }
 
+export const fetchUserInfo = async (token) => {
+  try {
+    const res = await axios.get(`
+      ${apiUrl}/api/users/get-info`, axiosOptions(token)
+    )
+    return res.data
+  } catch (error) {
+    errorHandler(error)
+  }
+}
+
+const axiosOptions = (token) => ({
+  headers: {
+    "x-session-key": token
+  }
+})
+
 const errorHandler = (error) => {
   if (error.response) {
-    errorAlert(error.response.data.msg)
+    // errorAlert(error.response.data.msg)
+    localStorage.removeItem("sessionToken")
   } else if (error.request) {
     errorAlert("Check your internet connection")
   } else {
