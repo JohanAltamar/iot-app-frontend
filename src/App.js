@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import io from 'socket.io-client';
+import AppRouter from './router/AppRouter';
 
 function App() {
   useEffect(() => {
@@ -8,7 +9,7 @@ function App() {
         user: 'TEST'
       }
     })
-    
+
     socketClient.on("connect", () => {
       console.log("Connected")
     })
@@ -19,9 +20,7 @@ function App() {
   }, [])
 
   return (
-    <div className="App">
-      hola
-    </div>
+    <AppRouter />
   );
 }
 
