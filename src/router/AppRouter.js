@@ -3,6 +3,7 @@ import UserContext from '../context/UserContext';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import HomeScreen from '../screens/HomeScreen';
+import RoomScreen from '../screens/RoomScreen';
 import AuthRouter from './AuthRouter';
 import ProtectedRoute from './ProtectedRoute';
 import { fetchUserInfo } from '../api/users';
@@ -40,6 +41,12 @@ const AppRouter = () => {
                 exact
                 path="/"
                 component={HomeScreen}
+                user={userInfo}
+              />
+              <ProtectedRoute
+                exact
+                path="/rooms/:roomID"
+                component={RoomScreen}
                 user={userInfo}
               />
               <Route path="/auth" component={AuthRouter} />
