@@ -34,6 +34,17 @@ export const fetchUserInfo = async (token) => {
   }
 }
 
+export const getRooms = async (token, userID) => {
+  try {
+    const res = await axios.get(
+      `${apiUrl}/api/rooms/user/${userID}`, axiosOptions(token)
+    )
+    return res.data
+  } catch (error) {
+    errorHandler(error)
+  }
+}
+
 const axiosOptions = (token) => ({
   headers: {
     "x-session-key": token
