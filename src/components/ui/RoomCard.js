@@ -1,8 +1,11 @@
-import PropTypes from 'prop-types';
+import { useContext } from 'react';
 import { useHistory } from 'react-router';
+import PropTypes from 'prop-types';
 import { Card, CardContent, CardMedia, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import WeekendIcon from '@material-ui/icons/Weekend';
+
+import ThemeContext from '../../context/ThemeContext';
 
 const useStyles = makeStyles(theme => ({
   cardContainer: {
@@ -30,6 +33,7 @@ const useStyles = makeStyles(theme => ({
 const RoomCard = ({ name, id, icon }) => {
   const classes = useStyles();
   const history = useHistory();
+  const { darkMode } = useContext(ThemeContext)
 
   const handleCardClick = id => (ev) => {
     history.push(`/rooms/${id}`)
@@ -40,10 +44,10 @@ const RoomCard = ({ name, id, icon }) => {
       id={id}
       className={classes.cardContainer}
       onClick={handleCardClick(id)}
-      elevation={4}
+      elevation={darkMode ? 0 : 4}
     >
       <CardMedia className={classes.cardMedia}>
-        <WeekendIcon />
+        <WeekendIcon color="action"/>
       </CardMedia>
       <CardContent className={classes.cardContent}>
         <Typography align="center" variant="h5" >

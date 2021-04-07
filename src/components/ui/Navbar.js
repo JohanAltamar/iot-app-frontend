@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   appBar: props => ({
-    backgroundColor: props.darkMode 
+    backgroundColor: props.darkMode
       ? theme.palette.primary.dark : theme.palette.primary.main
   }),
   menuButton: {
@@ -38,15 +38,19 @@ export default function Navbar({ handleToggleMenu }) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.appBar}>
+      <AppBar 
+        position="static" 
+        className={classes.appBar} 
+        elevation={darkMode ? 0 : 4}
+      >
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={handleToggleMenu}>
+          <IconButton edge="start" className={classes.menuButton} color="default" aria-label="menu" onClick={handleToggleMenu}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.title} color="textPrimary">
             Smart Home
           </Typography>
-          <IconButton edge="end" color="inherit" aria-label="logout" onClick={handleLogout}>
+          <IconButton edge="end" color="default" aria-label="logout" onClick={handleLogout}>
             <ExitToAppIcon />
           </IconButton>
         </Toolbar>

@@ -1,4 +1,5 @@
 import { createMuiTheme } from "@material-ui/core"
+import { blueGrey } from "@material-ui/core/colors";
 import { ThemeProvider } from '@material-ui/styles';
 import { useMemo, useState } from "react"
 
@@ -7,6 +8,11 @@ import ThemeContext from "../../context/ThemeContext";
 import Drawer from "../ui/Drawer"
 import Navbar from "../ui/Navbar"
 
+const styles = {
+  width: "100vw",
+  height: "100vh",
+  overflow: "auto"
+}
 
 const MainContainer = ({ children }) => {
   const [toggleMenu, setToggleMenu] = useState(false)
@@ -17,7 +23,12 @@ const MainContainer = ({ children }) => {
     palette: {
       type: darkMode ? 'dark' : 'light',
       primary: {
-        main: "#00bfa5",
+        main: blueGrey[100],
+        dark: blueGrey[800]
+      },
+      background: {
+        paper: darkMode ? blueGrey[800] : blueGrey["100"],
+        default: darkMode ? blueGrey[800] : blueGrey["A100"],
       }
     },
   }), [darkMode]);
@@ -34,9 +45,13 @@ const MainContainer = ({ children }) => {
     <SocketContext.Provider value={{ socketConnection, setSocketConnection }}>
       <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
         <ThemeProvider theme={darkTheme}>
-          <Navbar handleToggleMenu={handleToggleMenu} />
-          <Drawer handleCloseMenu={handleCloseMenu} state={toggleMenu} />
-          {children}
+          <div style={
+            { ...styles, backgroundColor: darkMode ? blueGrey[900] : blueGrey[50] }}
+          >
+            <Navbar handleToggleMenu={handleToggleMenu} />
+            <Drawer handleCloseMenu={handleCloseMenu} state={toggleMenu} />
+            {children}
+          </div>
         </ThemeProvider>
       </ThemeContext.Provider>
     </SocketContext.Provider>

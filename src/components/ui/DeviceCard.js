@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent, CardMedia, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
+
+import ThemeContext from '../../context/ThemeContext';
 
 const useStyles = makeStyles(theme => ({
   cardContainer: {
@@ -33,12 +35,13 @@ const useStyles = makeStyles(theme => ({
 
 const DeviceCard = ({ name, id, icon, value, minValue, maxValue }) => {
   const classes = useStyles();
+  const { darkMode } = useContext(ThemeContext)
 
   return (
     <Card
       id={id}
       className={classes.cardContainer}
-      elevation={4}
+      elevation={darkMode ? 0 : 4}
     >
       <CardContent className={classes.cardContent}>
         <Typography align="center" variant="h5" >
