@@ -5,11 +5,16 @@ import { IconButton, AppBar, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { logoutUser } from '../../api/users';
+import ThemeContext from '../../context/ThemeContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  appBar: props => ({
+    backgroundColor: props.darkMode 
+      ? theme.palette.primary.dark : theme.palette.primary.main
+  }),
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -19,8 +24,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar({ handleToggleMenu }) {
-  const classes = useStyles();
   const { sessionToken, setSessionToken } = useContext(UserContext)
+  const { darkMode } = useContext(ThemeContext)
+  const classes = useStyles({ darkMode });
 
   const handleLogout = async () => {
     const resp = await logoutUser(sessionToken);
@@ -32,7 +38,7 @@ export default function Navbar({ handleToggleMenu }) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={handleToggleMenu}>
             <MenuIcon />

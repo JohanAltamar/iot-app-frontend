@@ -1,16 +1,11 @@
+import { useContext } from 'react';
+import { useHistory, useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import AppsIcon from '@material-ui/icons/Apps';
-import PersonIcon from '@material-ui/icons/Person';
-import WifiIcon from '@material-ui/icons/Wifi';
-import WifiOffIcon from '@material-ui/icons/WifiOff';
-import LightModeIcon from '@material-ui/icons/Brightness7';
-import DarkModeIcon from '@material-ui/icons/BrightnessLow';
-import LogoutIcon from '@material-ui/icons/ExitToApp';
-import { useHistory, useLocation } from 'react-router';
-import SocketContext from '../../context/SocketContext';
-import { useContext } from 'react';
+import { Apps, Person, Wifi, WifiOff, Brightness7 as LightModeIcon, BrightnessLow as DarkModeIcon, ExitToApp as LogoutIcon } from '@material-ui/icons';
 
+import SocketContext from '../../context/SocketContext';
+import ThemeContext from '../../context/ThemeContext';
 
 const useStyles = makeStyles({
   list: {
@@ -24,6 +19,7 @@ const DrawerList = ({ toggleDrawer }) => {
   const { pathname } = useLocation();
 
   const { socketConnection, setSocketConnection } = useContext(SocketContext)
+  const { darkMode, setDarkMode } = useContext(ThemeContext)
 
   const handleRedirect = (pathName) => (event) => {
     history.push(pathName)
@@ -34,7 +30,7 @@ const DrawerList = ({ toggleDrawer }) => {
   }
 
   const handleToggleDarkMode = () => {
-
+    setDarkMode(!darkMode)
   }
 
   return (
@@ -45,12 +41,12 @@ const DrawerList = ({ toggleDrawer }) => {
     >
       <List>
         <ListItem button onClick={handleRedirect("/")}>
-          <ListItemIcon> <AppsIcon /> </ListItemIcon>
+          <ListItemIcon> <Apps /> </ListItemIcon>
           <ListItemText primary={"Home"} />
         </ListItem>
 
         <ListItem button onClick={handleRedirect("/profile")}>
-          <ListItemIcon> <PersonIcon /> </ListItemIcon>
+          <ListItemIcon> <Person /> </ListItemIcon>
           <ListItemText primary={"Profile"} />
         </ListItem>
 
@@ -60,22 +56,22 @@ const DrawerList = ({ toggleDrawer }) => {
             <ListItemIcon>
               {
                 socketConnection
-                  ? <WifiOffIcon />
-                  : <WifiIcon />
+                  ? <WifiOff />
+                  : <Wifi />
               }
             </ListItemIcon>
             <ListItemText primary={socketConnection ? "Disconnect Room" : "Connect Room"} />
           </ListItem>
         }
 
-        <ListItem button onClick={handleToggleDarkMode} >
-          <ListItemIcon> <LightModeIcon /> </ListItemIcon>
-          <ListItemText primary={"Light Mode"} />
-        </ListItem>
 
         <ListItem button onClick={handleToggleDarkMode} >
-          <ListItemIcon> <DarkModeIcon /> </ListItemIcon>
-          <ListItemText primary={"Dark Mode"} />
+          <ListItemIcon>
+            {darkMode
+              ? <LightModeIcon />
+              : <DarkModeIcon />
+            } </ListItemIcon>
+          <ListItemText primary={darkMode ? "Light Mode" : "Dark Mode"} />
         </ListItem>
 
         <ListItem button >
