@@ -7,7 +7,9 @@ import WifiOffIcon from '@material-ui/icons/WifiOff';
 import LightModeIcon from '@material-ui/icons/Brightness7';
 import DarkModeIcon from '@material-ui/icons/BrightnessLow';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
+import SocketContext from '../../context/SocketContext';
+import { useContext } from 'react';
 
 
 const useStyles = makeStyles({
@@ -19,13 +21,16 @@ const useStyles = makeStyles({
 const DrawerList = ({ toggleDrawer }) => {
   const classes = useStyles();
   const history = useHistory();
+  const { pathname } = useLocation();
+
+  const { socketConnection, setSocketConnection } = useContext(SocketContext)
 
   const handleRedirect = (pathName) => (event) => {
     history.push(pathName)
   }
 
-  const handleToggleSokectsConnection = ( event )=> {
-
+  const handleToggleSokectsConnection = (event) => {
+    setSocketConnection(!socketConnection)
   }
 
   const handleToggleDarkMode = () => {
@@ -36,7 +41,6 @@ const DrawerList = ({ toggleDrawer }) => {
     <div
       className={classes.list}
       role="presentation"
-      onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
       <List>
@@ -50,15 +54,19 @@ const DrawerList = ({ toggleDrawer }) => {
           <ListItemText primary={"Profile"} />
         </ListItem>
 
-        <ListItem button onClick={handleToggleSokectsConnection} >
-          <ListItemIcon> <WifiOffIcon /> </ListItemIcon>
-          <ListItemText primary={"Disconnect Room"} />
-        </ListItem>
-
-        <ListItem button onClick={handleToggleSokectsConnection} >
-          <ListItemIcon> <WifiIcon /> </ListItemIcon>
-          <ListItemText primary={"Connect Room"} />
-        </ListItem>
+        {
+          // ONLY DISPLAYED WITH ROOMS URLs
+          <ListItem button onClick={handleToggleSokectsConnection} disabled={!pathname.includes("/rooms/")}>
+            <ListItemIcon>
+              {
+                socketConnection
+                  ? <WifiOffIcon />
+                  : <WifiIcon />
+              }
+            </ListItemIcon>
+            <ListItemText primary={socketConnection ? "Disconnect Room" : "Connect Room"} />
+          </ListItem>
+        }
 
         <ListItem button onClick={handleToggleDarkMode} >
           <ListItemIcon> <LightModeIcon /> </ListItemIcon>

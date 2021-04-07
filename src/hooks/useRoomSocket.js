@@ -1,10 +1,14 @@
 import io from 'socket.io-client';
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import SocketContext from '../context/SocketContext';
+
 
 export const useRoomSocket = (roomID, sessionToken, devicesList) => {
   const [state, setState] = useState(false);
   const [devicesIDs, setDevicesIDs] = useState([]);
   const [payload, setPayload] = useState([]);
+
+  const { socketConnection, setSocketConnection } = useContext(SocketContext)
 
   const handleMessageReceived = useCallback((data) => {
     const { deviceID, value } = data;
@@ -22,6 +26,11 @@ export const useRoomSocket = (roomID, sessionToken, devicesList) => {
     setPayload(devicesInfo);
   }, [devicesList])
 
+  // SET SOCKECT CONNECTION TO ACTIVE
+  useEffect(() => {
+    setSocketConnection(true)
+  }, [setSocketConnection])
+
   // SET AN ARRAY WITH DEVICES IDs
   useEffect(() => {
     let devicesArr = [];
@@ -36,7 +45,7 @@ export const useRoomSocket = (roomID, sessionToken, devicesList) => {
 
   // SET SOCKET CONNECTION AND SUBSCRIPTIONS TO DEVICES IDs
   useEffect(() => {
-    if (!!devicesIDs.length) {
+    if (!!devicesIDs.length && socketConnection) {
       const socketClient = io("http://localhost:8080", {
         transports: ['websocket', 'polling', 'flashsocket'],
         auth: {
@@ -48,6 +57,7 @@ export const useRoomSocket = (roomID, sessionToken, devicesList) => {
 
       socketClient.on("connect", () => {
         setState(true);
+        setSocketConnection(true)
         // console.log(`Connected to rooms ${devicesIDs}`)
       })
 
@@ -57,6 +67,7 @@ export const useRoomSocket = (roomID, sessionToken, devicesList) => {
 
       socketClient.on("disconnect", () => {
         setState(false);
+        setSocketConnection(false)
         // console.log(`Leaving rooms ${devicesIDs}`)
       })
 
@@ -68,7 +79,7 @@ export const useRoomSocket = (roomID, sessionToken, devicesList) => {
         socketClient.disconnect();
       }
     }
-  }, [roomID, sessionToken, devicesIDs, handleMessageReceived])
+  }, [roomID, sessionToken, devicesIDs, handleMessageReceived, setSocketConnection, socketConnection])
 
   return [state, payload];
 }
